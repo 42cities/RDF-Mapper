@@ -1,0 +1,7 @@
+.DS_Store
+.tmp
+.yardoc
+pkg
+tmp
+test
+*.gem

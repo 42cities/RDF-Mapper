@@ -1,0 +1,189 @@
+= RDFMapper -- Object-relation mapping for RDF data
+
+RDFMapper is an ORM[http://en.wikipedia.org/wiki/Object-relational_mapping]
+written in Ruby that is designed to play nicely with RDF data.
+
+== Features
+
+- 100% Ruby code based on a slim & smart {RDF.rb}[http://rdf.rubyforge.org/] library
+- All the usual Rails methods: find, create, belongs_to, has_many -- you name it
+- Built with performance in mind: all objects are lazy-loaded by default
+- Supports REST, SPARQL and ActiveRecord as RDF data sources
+- Supports XML, N-Triples and JSON out of the box
+
+== Installation
+
+The prefered method of installing RDFMapper is through its gem file (requires
+RubyGems[http://rubygems.rubyforge.org/wiki/wiki.pl]):
+
+  % [sudo] gem install rdf-mapper
+
+The latest version of RDFMapper can be found at
+
+* http://github.com/42cities/rdf-mapper
+
+
+== Contribute
+
+Please note that RDFMapper in under heavy development right now, it's not yet
+production safe. Any contribution (bug tickets, code patches) is more than
+welcome. Email us at team@42cities.com or submit a ticket on
+GitHub[http://github.com/42cities/rdf-mapper/issues]
+
+
+= 5-minute crash course
+
+=== Idea behind RDF models
+
+Models in RDFMapper are essentially RDF nodes that have an ID and at least one triple
+with an rdf:type predicate. Consider the following example:
+
+  <http://example.org/people/237643>   rdf:type       <http://www.example.org/schema#Person>
+  <http://example.org/people/237643>   example:name   "John Smith"
+  <http://example.org/people/237643>   example:age    "27"^^xsd:integer
+
+This set of triples defines a node (with an ID of <http://example.org/people/237643>)
+that has three 'attributes': `example:name`, `example:age`, and `rdf:type`. Now `rdf:type`
+predicate tells us that there's a class (<http://www.example.org/schema#Person>)
+with more or less predefined behavior. And our node (<http://example.org/people/237643>)
+is an instance of that class. We could replicate the same logic in Ruby:
+
+  class Person
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :age
+  end
+  
+  person = Person.new
+  person.id = "http://example.org/people/237643"
+  person.name = "John Smith"
+  person.age = 27
+
+That's essentially what RDFMapper does. It accepts RDF triples (XML or N-triples),
+creates instances, assigns attributes and binds models together (via Rails-like
+belongs_to and has_many associations).
+
+
+=== Defining a model
+
+Before you start working with RDFMapper, you need to define at least one model. The only
+required setting is its namespace (think XML namespace) or type (think rdf:type). If you
+specify the namespace, it will be used by the model itself (to figure out its rdf:type)
+and by its attributes (to figure out RDF predicates).
+
+  class Person < RDFMapper::Model
+    namespace "http://example.org/#"
+    attribute :name,     :type => :text
+    attribute :homepage, :type => :uri, :predicate => 'http://xmlns.com/foaf/0.1/homepage'
+  end
+
+  Person.namespace        #=> #<RDF::Vocabulary(http://example.org/#)>
+  Person.type             #=> #<RDF::URI(http://example.org/#Person)>
+  
+  Person.name.type        #=> #<RDF::URI(http://example.org/#name")>
+  Person.homepage.type    #=> #<RDF::URI(http://xmlns.com/foaf/0.1/homepage)>
+
+For more information on {RDF::URI}[http://rdf.rubyforge.org/RDF/URI.html],
+{RDF::Vocabulary}[http://rdf.rubyforge.org/RDF/Vocabulary.html] and other
+classes within RDF namespace, refer to {RDF.rb documentation}[http://rdf.rubyforge.org/].
+
+
+=== Defining the data source
+
+By this moment you can work with RDFMapper models with no additional settings.
+However, if you want to load, save and search for your objects, you need to
+specify their data source. RDFMapper comes with 3 different flavors of data
+sources: REST, SPARQL and Rails.
+
+* {RDFMapper::Adapters::SPARQL SPARQL} [*read-only*] -- the standard for RDF data.
+  RDFMapper will query specified SPARQL server over HTTP using standard SPARQL
+  syntax. Currently it supports only a few functions (no subqueries, updates,
+  aggregates, etc.)
+
+* {RDFMapper::Adapters::REST REST} [*read-only*] -- good old HTTP-based data
+  storage. It assumes that an object's ID (which is an URI) is the place to
+  look when you want to get object's properties. For example, if an object has
+  an ID `http://example.org/people/237643`, RDFMapper will download data from
+  this address and parse any RDF triples it finds along the way.
+
+* {RDFMapper::Adapters::Rails Rails} [*read/write*] -- gets the data from an
+  ActiveRecord model (that is Rails model). This adapter assumes an RDFMapper
+  model has a 'mirror' ActiveRecord model with the same attributes and
+  associations.
+
+Assigning data source to a model is easy:
+
+  class Person < RDFMapper::Model
+    adapter :rails   # There should be a `Person` class that subclasses ActiveRecord::Base
+  end
+  
+  class Person < RDFMapper
+    adapter :rails, :class_name => 'Employee'   # ActiveRecord::Base model is called `Employee`
+  end
+
+  class Person < RDFMapper
+    adapter :sparql, {
+		:server => 'http://some-sparql-server.com'
+		:headers => { 'API-Key' => '89d7sfd9sfs' }
+	}
+  end
+
+
+=== Searching
+
+If you search objects by an ID, it's up to the adapter (REST, SPARQL, or Rails) to
+decide what type of ID it requires (an URI, a database column or something else).
+Check out the documentation for each adapter to see how works:
+{RDFMapper::Adapters::SPARQL SPARQL}, {RDFMapper::Adapters::REST REST}, {RDFMapper::Adapters::Rails Rails}.
+
+  Person.all                                              #=> #<PersonCollection:23784623>
+  Person.find('132987')                                   #=> #<Person:217132856>
+  Person.find(:all, :conditions => { :name => 'John' })   #=> #<PersonCollection:32462387>
+
+Note, the objects above are not loaded. RDFMapper will load them once you
+access an attribute of a collection or an object. The following 3 objects are
+loaded instantly, since RDFMapper needs to figure out what their attributes are
+(in this case `nil?`, `name` and `length`).
+
+  Person.find('132987').nil?                                     #=> false
+  Person.find('132987').name                                     #=> "John"
+  Person.find(:all, :conditions => { :name => 'John' }).length   #=> 3
+
+You should take extra care when dealing with lazy-loaded models, since
+exceptions may occur when a model is not found:
+
+  Person.find('132987')         #=> #<Person:217132856>
+  Person.find('132987').name    #=> NoMethodError: undefined method `name' for nil:NilClass
+
+Instead, you should first check if a model exists:
+
+  @person = Person.find('132987')
+  @person.name unless @person.nil?
+
+
+=== Working with attributes
+
+Attributes in RDFMapper work just as you would expect them to work with just one
+small exception. Since any attribute of a model is essentially an RDF triple, you
+can access attributes by their predicates as well:
+
+  class Person < RDFMapper::Model
+    namespace "http://example.org/#"
+    attribute :name, :type => :text
+    attribute :homepage, :type => :uri, :predicate => 'http://xmlns.com/foaf/0.1/homepage'
+  end
+
+  instance = Person.new
+  instance.name                                   #=> "John Smith"
+  instance[:name]                                 #=> "John Smith"
+  instance['http://example.org/#name']            #=> "John Smith"
+  instance.homepage                               #=> #<RDF::URI(http://johnsmith.com/")>
+  instance['http://xmlns.com/foaf/0.1/homepage']  #=> #<RDF::URI(http://johnsmith.com/")>
+
+
+That's pretty much all you need to know. Go try and let us know what you think!
+
+== License
+
+RDFMapper is free and unencumbered public domain software. For more information,
+see http://unlicense.org or the accompanying UNLICENSE file.
