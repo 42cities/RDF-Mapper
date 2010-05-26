@@ -95,18 +95,18 @@ However, if you want to load, save and search for your objects, you need to
 specify their data source. RDFMapper comes with 3 different flavors of data
 sources: REST, SPARQL and Rails.
 
-* {RDFMapper::Adapters::SPARQL SPARQL} [*read-only*] -- the standard for RDF data.
+* SPARQL [read-only] -- the standard for RDF data.
   RDFMapper will query specified SPARQL server over HTTP using standard SPARQL
   syntax. Currently it supports only a few functions (no subqueries, updates,
   aggregates, etc.)
 
-* {RDFMapper::Adapters::REST REST} [*read-only*] -- good old HTTP-based data
+* REST [read-only] -- good old HTTP-based data
   storage. It assumes that an object's ID (which is an URI) is the place to
   look when you want to get object's properties. For example, if an object has
   an ID `http://example.org/people/237643`, RDFMapper will download data from
   this address and parse any RDF triples it finds along the way.
 
-* {RDFMapper::Adapters::Rails Rails} [*read/write*] -- gets the data from an
+* Rails [read/write] -- gets the data from an
   ActiveRecord model (that is Rails model). This adapter assumes an RDFMapper
   model has a 'mirror' ActiveRecord model with the same attributes and
   associations.
@@ -133,8 +133,7 @@ Assigning data source to a model is easy:
 
 If you search objects by an ID, it's up to the adapter (REST, SPARQL, or Rails) to
 decide what type of ID it requires (an URI, a database column or something else).
-Check out the documentation for each adapter to see how works:
-{RDFMapper::Adapters::SPARQL SPARQL}, {RDFMapper::Adapters::REST REST}, {RDFMapper::Adapters::Rails Rails}.
+Check out the documentation for each adapter to see how works.
 
   Person.all                                              #=> #<PersonCollection:23784623>
   Person.find('132987')                                   #=> #<Person:217132856>
