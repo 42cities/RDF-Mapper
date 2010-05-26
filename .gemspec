@@ -13,10 +13,11 @@ Gem::Specification.new do |gem|
     gem.files              = %w(README.rdoc UNLICENSE VERSION) + Dir.glob('lib/**/*.rb')
     gem.require_paths      = %w(lib)
     gem.has_rdoc           = true
-    gem.add_development_dependency 'rspec',   '>= 1.3.0'
-    gem.add_runtime_dependency     'rdf',     '>= 0.1.1'
-    gem.add_runtime_dependency     'rdf-xml', '>= 0.0.1'
-    gem.add_runtime_dependency     'patron',  '>= 0.4.6'
+    gem.add_development_dependency 'rspec',       '>= 1.3.0'
+    gem.add_runtime_dependency     'rdf',         '>= 0.1.1'
+    gem.add_runtime_dependency     'rdf-xml',     '>= 0.0.3'
+    gem.add_runtime_dependency     'rdf-sparql',  '>= 0.0.2'
+    gem.add_runtime_dependency     'patron',      '>= 0.4.6'
     gem.post_install_message       = nil
     
 end
