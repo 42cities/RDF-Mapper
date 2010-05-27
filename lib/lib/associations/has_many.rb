@@ -139,6 +139,7 @@ module RDFMapper
           :conditions => { reverse => @instance },
           :skip => [reverse]
         })
+        @value || []
       end
       
       ##
