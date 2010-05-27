@@ -14,7 +14,7 @@ module RDFMapper
           objects = [objects]
         end
 
-        new_objects = filter(objects.to_a)
+        new_objects = filter(objects)
         return self if new_objects.empty?
         
         new_objects.each do |child|
