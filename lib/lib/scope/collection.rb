@@ -128,6 +128,18 @@ module RDFMapper
       end
       
       ##
+      # Invokes the block passing in successive elements from array,
+      # returning an array containing those elements for which the
+      # block returns a true value.
+      #
+      # @yield [Object]
+      # @return [Array]
+      ##
+      def select(&block)
+        items.select { |x| block.call(x) }
+      end
+      
+      ##
       # Converts collection into Array.
       #
       # @return [Array]
