@@ -495,7 +495,7 @@ module RDFMapper
     ##
     def properties(*args)
       Hash[self.class.properties.keys.map do |name|
-        [ name, @attributes[name] ]
+        [ name, self[name] ]
       end].merge(@arbitrary)
     end
     
