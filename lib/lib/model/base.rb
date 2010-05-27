@@ -496,7 +496,7 @@ module RDFMapper
     def properties(*args)
       Hash[self.class.properties.keys.map do |name|
         [ name, self[name] ]
-      end].merge(@arbitrary)
+      end].merge(@arbitrary).merge({ :id => id })
     end
     
     ##
@@ -508,7 +508,7 @@ module RDFMapper
     def attributes(*args)
       Hash[@attributes.keys.map do |name|
         [ name, self[name] ]
-      end].merge(@arbitrary)
+      end].merge(@arbitrary).merge({ :id => id })
     end
     
     ##
