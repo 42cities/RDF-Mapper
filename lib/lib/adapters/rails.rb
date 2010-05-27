@@ -59,7 +59,7 @@ module RDFMapper
       # [-]
       ##
       def update(instance)
-        query = RDFMapper::Scope::Query.new(instance.class, :conditions => instance.attributes)
+        query = RDFMapper::Scope::Query.new(instance.class, :conditions => instance.properties)
         Query.new(query, @options).update
       end
       
@@ -67,7 +67,7 @@ module RDFMapper
       # [-]
       ##
       def create(instance)
-        query = RDFMapper::Scope::Query.new(instance.class, :conditions => instance.attributes)
+        query = RDFMapper::Scope::Query.new(instance.class, :conditions => instance.properties)
         Query.new(query, @options).create
       end
       
