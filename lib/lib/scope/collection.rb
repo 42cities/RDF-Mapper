@@ -142,6 +142,13 @@ module RDFMapper
       alias_method :include?, :exists?
 
       ##
+      # [-]
+      ##
+      def kind_of?(cls)
+        cls == self.class || cls == Enumerable || cls == Array
+      end
+
+      ##
       # Developer-friendly representation of the instance
       #
       # @return [String]
