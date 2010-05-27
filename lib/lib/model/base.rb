@@ -267,13 +267,11 @@ module RDFMapper
       # successfully to the database or not.
       #
       # @param [Hash] attributes attributes of the new object
-      # @param [RDF::URI, String] id object's ID
-      #
       # @return [Object] instance of RDFMapper::Model
       # @return [nil] if save was unsuccessful
       ##
-      def create(attributes, id)
-        new(attributes).save(id)
+      def create(attributes)
+        new(attributes).save(attributes[:id])
       end
       
       ##
@@ -310,15 +308,13 @@ module RDFMapper
       ##
       # Either finds or creates an object with the specified ID.
       #
-      # @param [RDF::URI, String] id object's ID
       # @param [Hash] attributes attributes of the new object
-      #
       # @return [Object] instance of RDFMapper::Model
       # @return [nil] if save was unsuccessful
       ##
-      def find_or_create(id, attributes = {})
-        instance = find(id)
-        instance.nil? ? create(id, attributes) : instance
+      def find_or_create(atts = {})
+        instance = atts[:id].nil? ? nil : find(atts[:id])
+        instance.nil? ? create(atts) : instance
       end
       
       ##
@@ -490,7 +486,7 @@ module RDFMapper
       end
       name.nil? ? nil : set_attribute(name, value)
     end
-    
+        
     ##
     # Returns a hash of all the attributes with their names as keys and
     # the attributes' values as values.
@@ -537,7 +533,7 @@ module RDFMapper
     def save(id = nil)
       # Raise error if adapter is unspecified
       check_for_adapter
-      
+            
       if new? and id.nil?
         raise RuntimeError, 'Save failed. ID must be specified'
       end
