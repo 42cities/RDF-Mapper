@@ -494,7 +494,9 @@ module RDFMapper
     # @return [Hash] all attributes of an instance (name => value)
     ##
     def attributes(*args)
-      @attributes.merge(@arbitrary)
+      Hash[@attributes.keys.map do |name|
+        [ name, self[name] ]
+      end].merge(@arbitrary)
     end
     
     ##
