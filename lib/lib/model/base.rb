@@ -486,7 +486,19 @@ module RDFMapper
       end
       name.nil? ? nil : set_attribute(name, value)
     end
-        
+    
+    ##
+    # Returns a hash of all the properties (i.e. attributes without
+    # associations).
+    #
+    # @return [Hash] all properties of an instance (name => value)
+    ##
+    def properties(*args)
+      Hash[self.class.properties.keys.map do |name|
+        [ name, @attributes[name] ]
+      end].merge(@arbitrary)
+    end
+    
     ##
     # Returns a hash of all the attributes with their names as keys and
     # the attributes' values as values.

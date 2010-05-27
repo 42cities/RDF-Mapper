@@ -50,9 +50,17 @@ module RDFMapper
       end
       
       ##
-      # Returns a hash of all the attributes with their names as keys and
-      # the attributes' values as values. If model is unloaded, it will
-      # preload it before returning its attributes.
+      # In addition to the original method, preloads the model.
+      # 
+      # @return [Hash] all attributes of an instance (name => value)
+      ##
+      def properties
+        check_for_nil_error
+        @loaded ? super : load.properties
+      end
+      
+      ##
+      # In addition to the original method, preloads the model.
       # 
       # @return [Hash] all attributes of an instance (name => value)
       ##
