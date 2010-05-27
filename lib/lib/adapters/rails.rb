@@ -109,8 +109,8 @@ module RDFMapper
         def find
           @query.check(:rails_id)
           #
-          debug 'Searching for %s with %s' % [@rails, @query.inspect]
-          debug 'Query: %s' % find_options.inspect
+          #debug 'Searching for %s with %s' % [@rails, @query.inspect]
+          #debug 'Query: %s' % find_options.inspect
           #
           @rails.find(:all, find_options).map do |record|
             record_attributes(record)
