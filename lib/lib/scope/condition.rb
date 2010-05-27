@@ -18,10 +18,10 @@ module RDFMapper
         if @att == :id
           return @att
         end
-        unless att = @cls.has?(@att)
-          raise RuntimeError, 'Undefined attribute %s for %s' % [@att, @cls]
-        else
+        if att = @cls.has?(@att)
           att.name
+        else
+          @att
         end
       end
       
