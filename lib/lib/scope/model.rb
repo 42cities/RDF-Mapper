@@ -46,7 +46,7 @@ module RDFMapper
       # In addition to the original method, preloads the model.
       ##
       def [](name)
-        super || (@loaded ? nil : load[name])
+        @arbitrary[name] || (@loaded ? super(name) : load[name])
       end
       
       ##
@@ -112,7 +112,7 @@ module RDFMapper
       # In addition to the original method, preloads the model.
       ##
       def get_attribute(name, *args)
-        @loaded ? super : load.send(name, *args)
+        @loaded ? super(name, *args) : load.send(name, *args)
       end
       
       ##
