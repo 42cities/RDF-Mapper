@@ -141,12 +141,9 @@ module RDFMapper
         else
           RDF::URI.new(self[:id].to_s)
         end
-        [{ :subject => target,
-           :predicate => RDF.type,
-           :object => @cls.type
-        }] + to_a(:id).map do |condition|
+        to_a(:id).map do |condition|
           condition.to_statements(target)
-        end.flatten.compact
+        end.flatten.compact + @cls.to_statements(:short => true)
       end
       
       ##
