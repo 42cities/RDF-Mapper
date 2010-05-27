@@ -10,8 +10,12 @@ module RDFMapper
       # objects as appropriate.
       ##
       def replace(objects)
+        unless objects.kind_of? Array
+          objects = [objects]
+        end
+
         new_objects = filter(objects.to_a)
-        return @value if new_objects.empty?
+        return self if new_objects.empty?
         
         new_objects.each do |child|
           self << child
@@ -22,7 +26,7 @@ module RDFMapper
           delete(child) unless new_objects.include?(child)
         end
         
-        @value
+        self
       end
       
       ##
@@ -103,6 +107,13 @@ module RDFMapper
       ##
       def to_a
         value
+      end
+      
+      ##
+      # [-]
+      ##
+      def kind_of?(cls)
+        cls == self.class || cls == Enumerable || cls == Array
       end
       
       
