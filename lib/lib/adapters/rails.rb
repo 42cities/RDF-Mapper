@@ -138,7 +138,7 @@ module RDFMapper
         def save_options
           Hash[@query.to_a.map do |condition|
             name = @replace[condition.name]
-            [name, validate(condition.value)]
+            [name, condition.value]
           end.reject do |name, value|
             name.nil? or value.nil?
           end]
