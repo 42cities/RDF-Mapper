@@ -65,6 +65,8 @@ module RDFMapper
       #
       #   Person.ns        #=> 'example'
       #   Person.to_xml    #=> '<my:Person></my:Person>'
+      #
+      # @return [String]
       ##
       def ns
         @ns.to_s || 'myrdf'
@@ -507,6 +509,20 @@ module RDFMapper
       Hash[self.class.properties.keys.map do |name|
         [ name, self[name] ]
       end].merge(@arbitrary).merge({ :id => id })
+    end
+    
+    ##
+    # Returns a hash of all foreign keys (i.e. URIs) for belongs_to
+    # type of associations.
+    #
+    # @return [Hash] all foreign keys of an instance (name => uri)
+    ##
+    def foreign_keys
+      Hash[self.class.associations.select do |name, assoc|
+        assoc.belongs_to?
+      end.map do |name, assoc|
+        [ name, @attributes[name].keys ]
+      end]
     end
     
     ##

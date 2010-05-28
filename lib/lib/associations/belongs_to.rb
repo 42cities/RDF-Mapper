@@ -43,6 +43,12 @@ module RDFMapper
         end
       end
 
+      ##
+      # Returns the 'foreign key' (i.e. association URI).
+      ##
+      def keys
+        @key || value.id
+      end
 
       private
 
