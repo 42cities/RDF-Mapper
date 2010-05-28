@@ -634,6 +634,9 @@ module RDFMapper
     # object, like Date.new(2004, 12, 12)).
     ##
     def get_attribute(name, *args, &block) #nodoc
+      if name == :id
+        return @id
+      end
       if @attributes.key?(name)
         @attributes[name].object(*args, &block)
       else
