@@ -98,8 +98,7 @@ module RDFMapper
       # Returns true if a given object is present in the collection
       ##
       def include?(object)
-        @value ||= []
-        @value.include?(object)
+        value.include?(object)
       end
             
       ##
@@ -135,11 +134,12 @@ module RDFMapper
         if @instance.id.nil?
           return []
         end
+        @value = []
         replace @association.find(:all, {
           :conditions => { reverse => @instance },
           :skip => [reverse]
         })
-        @value || []
+        @value
       end
       
       ##
