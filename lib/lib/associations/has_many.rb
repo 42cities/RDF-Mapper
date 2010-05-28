@@ -77,16 +77,13 @@ module RDFMapper
       end
       
       ##
-      # Returns one or more new objects of the collection type that
-      # have been instantiated with attributes and linked to this object
-      # through a foreign key, but have not yet been saved.
+      # Returns a new object of the collection type that has been
+      # instantiated with attributes and linked to this object,
+      # but not yet saved.
       ##
-      def build(*attributes)
-        objs = attributes.map do |atts|
-          @association.new(atts)
-        end
-        self.push(*objs)
-        objs
+      def build(attributes)
+        obj = @association.new(attributes)
+        (self << obj).last
       end
       
       ##
@@ -94,8 +91,9 @@ module RDFMapper
       # instantiated with attributes, linked to this object through
       # a foreign key, and that has already been saved.
       ##
-      def create
-        raise NotImplementedError, '`create` not yet implemented' # TODO
+      def create(attributes = {})
+        obj = @association.create(attributes.merge({ reverse => @instance }))
+        (self << obj).last
       end
 
       ##
