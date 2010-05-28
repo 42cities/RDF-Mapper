@@ -460,6 +460,7 @@ module RDFMapper
     # @return [Boolean]
     ##
     def ==(other)
+      return false unless other.kind_of? self.class
       (other.nil? or other.id.nil?) ? false : (id == other.id)
     end
     
