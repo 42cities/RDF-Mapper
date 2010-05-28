@@ -28,7 +28,7 @@ module RDFMapper
         when :rails   then Rails
         when :sparql  then SPARQL
         when :rest    then REST
-        else raise NameError, 'Adapter `%s` not recognized' % value.inspect
+        else raise NameError, 'Adapter `%s` not recognized' % name.inspect
       end
     end
     
@@ -42,7 +42,7 @@ module RDFMapper
       # All adapters implement Logger
       ##
       include RDFMapper::Logger
-
+      
       ##
       # Adapter implementation should override this method
       ##
@@ -61,21 +61,21 @@ module RDFMapper
       # Adapter implementation should override this method
       ##
       def reload(instance)
-        raise NotImplementedError, 'Expected adapter to override `save`'
+        raise NotImplementedError, 'Expected adapter to override `reload`'
       end
 
       ##
       # Adapter implementation should override this method
       ##
       def update(instance)
-        raise NotImplementedError, 'Expected adapter to override `save`'
+        raise NotImplementedError, 'Expected adapter to override `update`'
       end
       
       ##
       # Adapter implementation should override this method
       ##
       def create(instance)
-        raise NotImplementedError, 'Expected adapter to override `save`'
+        raise NotImplementedError, 'Expected adapter to override `create`'
       end
       
     end
