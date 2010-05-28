@@ -56,8 +56,18 @@ module RDFMapper
         end
       end
       
+      ##
+      # Returns the short name for model's namespace. Defaults to `myrdf`
+      #
+      #   class Person < RDFMapper::Model
+      #     namespace 'http://example.org/schema#', :name => 'my'
+      #   end
+      #
+      #   Person.ns        #=> 'example'
+      #   Person.to_xml    #=> '<my:Person></my:Person>'
+      ##
       def ns
-        @ns || 'myrdf'
+        @ns.to_s || 'myrdf'
       end
       
       ##
