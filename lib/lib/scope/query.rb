@@ -75,6 +75,23 @@ module RDFMapper
       end
       
       ##
+      # Checks whether specified object passes all conditions of the query.
+      #
+      # @param [RDFMapper::Model] object 
+      ##
+      def matches?(object)
+        unless object.kind_of? RDFMapper::Model
+          return false
+        end
+        unless object.class == @cls
+          return false
+        end
+        to_a.reject do |condition|
+          condition.matches?(object)
+        end.empty?
+      end
+      
+      ##
       # [-]
       ##
       def [](name)

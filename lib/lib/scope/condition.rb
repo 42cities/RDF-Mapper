@@ -35,6 +35,15 @@ module RDFMapper
       alias_method :check, :value
       
       ##
+      # Checks whether specified object passes all conditions of the query.
+      #
+      # @param [RDFMapper::Model] object 
+      ##
+      def matches?(object)
+        object.send(name) == value
+      end
+      
+      ##
       # [-]
       ##
       def to_triples(subject)
