@@ -448,7 +448,7 @@ module RDFMapper
     ##
     # Returns objects's unique ID.
     #
-    # @return [RDF::URI] object's ID
+    # @return [String] object's ID (URI)
     ##
     def id(*args)
       @id.nil? ? nil : @id.dup
@@ -625,7 +625,7 @@ module RDFMapper
     # Sets ID of this object (must be RDF::URI or a String).
     ##
     def id=(value) #nodoc
-      @id = RDF::URI.new(value.to_s)
+      @id = value.to_s
     end
     
     ##
