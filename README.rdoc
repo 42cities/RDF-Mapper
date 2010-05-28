@@ -25,10 +25,10 @@ The latest version of RDFMapper can be found at
 
 == Contribute
 
-Please note that RDFMapper in under heavy development right now, it's not yet
-production safe. Any contribution (bug tickets, code patches) is more than
-welcome. Email us at team@42cities.com or submit a ticket on
-GitHub[http://github.com/42cities/rdf-mapper/issues]
+Please note that RDFMapper in under *heavy* *development* right now, it's *not*
+*yet* suitable for production environment. Any contribution (bug tickets,
+code patches) is more than welcome. Email us at team@42cities.com or submit
+a ticket on GitHub[http://github.com/42cities/rdf-mapper/issues].
 
 
 = 5-minute crash course
@@ -186,3 +186,17 @@ That's pretty much all you need to know. Go try and let us know what you think!
 
 RDFMapper is free and unencumbered public domain software. For more information,
 see http://unlicense.org or the accompanying UNLICENSE file.
+
+
+== Roadmap
+
+Several important features are not yet implemented. Here's a rough list of what is still
+to be done:
+
+* Test coverage is extremely low (~10%)
+* Documentation coverage is mediocre 
+* REST adapter is missing
+* SPARQL adapter supports only simple `DESCRIBE` queries. At later stages it will most
+  likely use {sparql-client}[http://github.com/bendiken/sparql-client] library.
+* JSON support is missing. Will use {rdf-json}[http://github.com/bendiken/rdf-json] library.
+* `has_one` and `has_and_belongs_to_many` are missing
