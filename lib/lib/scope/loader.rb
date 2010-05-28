@@ -39,7 +39,7 @@ module RDFMapper
       def from(adapter_or_collection, options = {})
         if adapter_or_collection.kind_of? Array
           @loaded = true
-          @objects = adapter_or_collection.select do |instance|
+          adapter_or_collection.select do |instance|
             @conditions.matches?(instance)
           end.each do |instance|
             @objects << instance.properties
