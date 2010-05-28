@@ -59,24 +59,27 @@ module RDFMapper
       # [-]
       ##
       def update(instance)
-        query = RDFMapper::Scope::Query.new(instance.class, :conditions => instance.properties)
-        Query.new(query, @options).update
+        Query.new(default_query(instance), @options).update
       end
       
       ##
       # [-]
       ##
       def create(instance)
-        query = RDFMapper::Scope::Query.new(instance.class, :conditions => instance.properties)
-        Query.new(query, @options).create
+        Query.new(default_query(instance), @options).create
       end
       
       
       private
       
-      def check_for_rails_id(instance)
+      ##
+      # [-]
+      ##
+      def default_query(instance) #nodoc
+        conditions = {}.merge(instance.properties).merge(instance.foreign_keys)
+        RDFMapper::Scope::Query.new(instance.class, :conditions => conditions)
       end
-
+      
       class Query
         
         include RDFMapper::Logger
