@@ -138,6 +138,8 @@ module RDFMapper
       ##
       def adapter(name = nil, options = {})
         return @adapter if name.nil?
+        @adapter_name = name
+        @adapter_opts = options
         @adapter = RDFMapper::Adapters.register(name, self, options)
       end
 
@@ -395,6 +397,10 @@ module RDFMapper
       def inherited(subclass) #nodoc
         @@subclasses ||= []
         @@subclasses << subclass
+        unless self == RDFMapper::Model
+          subclass.namespace(@namespace, :name => @ns)
+          subclass.adapter(@adapter_name, @adapter_opts)
+        end
       end
 
     end
