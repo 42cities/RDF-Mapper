@@ -24,14 +24,29 @@ module RDFMapper
       end
       
       ##
-      # Sets data adapter for this loader. This will override default model adapter.
+      # Sets data adapter or collection.
       #
-      # @param [Symbol] adapter (:rails, :sparql, :rest)
-      # @param [Hash] options options to pass on to the adapter constructor
-      # @return [Object] adapter instance 
+      # @overload type(adapter, options = {})
+      #   Sets data adapter, this will override default model adapter
+      #   @param [Symbol] adapter (:rails, :sparql, :rest)
+      #   @param [Hash] options options to pass on to the adapter constructor
+      #   @return [Object] adapter instance
+      #
+      # @overload type(collection)
+      #   Sets collection of instances that should be queried.
+      #   @param [Array] collection
       ##
-      def from(adapter, options = {})
-        @adapter = RDFMapper::Adapters.register(adapter, @cls, options)
+      def from(adapter_or_collection, options = {})
+        if adapter_or_collection.kind_of? Array
+          @loaded = true
+          @objects = adapter_or_collection.select do |instance|
+            @conditions.matches?(instance)
+          end.each do |instance|
+            @objects << instance.properties
+          end
+          return 
+        end
+        @adapter = RDFMapper::Adapters.register(adapter_or_collection, @cls, options)
       end
 
       ##
