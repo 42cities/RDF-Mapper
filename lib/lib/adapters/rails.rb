@@ -38,7 +38,7 @@ module RDFMapper
       def save(instance)
         if instance[:rails_id].nil?
           obj = instance.class.find(instance.id.to_s).from(:rails)
-          instance[:rails_id] = obj.rails_id unless obj.nil?
+          instance[:rails_id] = obj[:rails_id] unless obj.nil?
         end
         if instance[:rails_id].nil?
           create(instance)
