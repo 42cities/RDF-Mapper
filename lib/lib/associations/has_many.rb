@@ -95,6 +95,14 @@ module RDFMapper
         obj = @association.create(attributes.merge({ reverse => @instance }))
         (self << obj).last
       end
+      
+      ##
+      # Either finds or creates a new object in the collection. 
+      ##
+      def find_or_create(attributes = {})
+        obj = attributes[:id].nil? ? nil : find(attributes[:id])
+        obj.nil? ? create(attributes) : obj
+      end
 
       ##
       # Returns true if a given object is present in the collection
