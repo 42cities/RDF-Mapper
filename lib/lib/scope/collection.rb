@@ -30,6 +30,7 @@ module RDFMapper
       # @return [self]
       ##
       def from(adapter, options = {})
+        return if adapter.nil?
         @loader.from(adapter, options)
         self
       end

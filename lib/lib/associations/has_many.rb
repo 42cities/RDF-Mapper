@@ -125,6 +125,17 @@ module RDFMapper
         cls == self.class || cls == Enumerable || cls == Array
       end
       
+      ##
+      # [-]
+      ##
+      def from(adapter = nil, options = {})
+        if adapter.nil?
+          return @adapter
+        end
+        @adapter = [adapter, options]
+        self
+      end
+      
       
       private
       
@@ -148,7 +159,7 @@ module RDFMapper
         replace @association.find(:all, {
           :conditions => { reverse => @instance },
           :skip => [reverse]
-        })
+        }).from(*self.from)
         @value
       end
       
