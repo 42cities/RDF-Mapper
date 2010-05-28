@@ -81,8 +81,12 @@ module RDFMapper
       # have been instantiated with attributes and linked to this object
       # through a foreign key, but have not yet been saved.
       ##
-      def build
-        raise NotImplementedError, '`build` not yet implemented' # TODO
+      def build(*attributes)
+        objs = attributes.map do |atts|
+          @association.new(atts)
+        end
+        self.push(*objs)
+        objs
       end
       
       ##
