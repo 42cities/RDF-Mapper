@@ -138,7 +138,12 @@ module RDFMapper
         def save_options
           Hash[@query.to_a.map do |condition|
             name = @replace[condition.name]
-            [name, condition.value]
+            if condition.value.kind_of? RDFMapper::Model
+              value = condition.value[:rails_id]
+            else
+              value = condition.value
+            end
+            [name, value]
           end.reject do |name, value|
             name.nil? or value.nil?
           end]
