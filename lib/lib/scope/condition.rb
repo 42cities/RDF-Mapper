@@ -58,7 +58,7 @@ module RDFMapper
       def to_statements(subject)
         if association?
           object = association.id
-          rdf_type = association.to_triples(:short => true)
+          rdf_type = association.to_statements(:short => true)
         else
           object = RDF::Query::Variable.new
           object.bind(value, eq)
