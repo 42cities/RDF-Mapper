@@ -72,8 +72,8 @@ module RDFMapper
       # Finds an associated object according to the same rules as
       # RDFMapper::Model.find.
       ##
-      def find
-        raise NotImplementedError, '`find` not yet implemented' # TODO
+      def find(*args)
+        @association.find(*args).from(value)
       end
       
       ##
